@@ -1,12 +1,12 @@
-name: Build APK
+name: Build Debug APK
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main, master ]
+    branches: [ master ]
 
 jobs:
-  build:
+  build-debug:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up JDK
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -24,15 +24,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Grant permission
+      - name: Make gradlew executable
         run: chmod +x V2rayNG/gradlew
 
-      - name: Build APK
+      - name: Build Debug APK
         working-directory: V2rayNG
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleFdroidDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MrVPN7-v2rayNG-debug
+          name: MrVPN7-debug-apk
           path: V2rayNG/app/build/outputs/apk/**/*.apk
